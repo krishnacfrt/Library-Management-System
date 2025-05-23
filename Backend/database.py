@@ -7,7 +7,7 @@ db= mysql.connector.connect(
     database='library_management'
       )
 
-cur= db.cursor()
+cur= db.cursor(dictionary=True)
 
 #print(db.connection_id)
 #database and table > users, books, transactions is already created in sql
