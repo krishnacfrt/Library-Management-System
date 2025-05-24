@@ -1,0 +1,5 @@
+*.pyc 
+.vscode/   # VS Code settings
+node_modules/  # Node.js dependencies
+__pycache__/   # Python cache files
+*.env 
