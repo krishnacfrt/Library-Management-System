@@ -1,3 +1,4 @@
+import React from 'react'
 import Navbar from './Components/Navbar'
 import { BrowserRouter } from 'react-router-dom'
 import AppRoutes from './AppRoute/Route'
