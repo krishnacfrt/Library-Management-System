@@ -3,7 +3,7 @@ import axios from "axios";
 import { Modal, Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import '../Css/RegisterUser.css'
+import "../Css/RegisterUser.css"; 
 
 const UserRegistrationModal = ({ show, handleClose }) => {
   const [formData, setFormData] = useState({
@@ -30,29 +30,32 @@ const UserRegistrationModal = ({ show, handleClose }) => {
 
   return (
     <>
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>User Registration</Modal.Title>
+      <Modal show={show} onHide={handleClose} dialogClassName="custom-modal">
+        <Modal.Header>
+          <button type="button" className="close-btn" onClick={handleClose}>
+            &times;
+          </button>
         </Modal.Header>
         <Modal.Body>
+          <h4 className="modal-title">User Registration</h4>
           <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label>User ID</Form.Label>
-              <Form.Control type="text" name="userId" onChange={handleChange} required />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Name</Form.Label>
-              <Form.Control type="text" name="name" onChange={handleChange} required />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" name="email" onChange={handleChange} required />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Contact</Form.Label>
-              <Form.Control type="text" name="contact" onChange={handleChange} required />
-            </Form.Group>
-            <Button variant="primary" type="submit">
+            <div className="form-group">
+              <label className="form-label">User ID:</label>
+              <input type="text" className="form-control" name="userId" onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Name:</label>
+              <input type="text" className="form-control" name="name" onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Email:</label>
+              <input type="email" className="form-control" name="email" onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Contact:</label>
+              <input type="text" className="form-control" name="contact" onChange={handleChange} required />
+            </div>
+            <Button variant="primary" type="submit" className="submit-btn">
               Register
             </Button>
           </Form>

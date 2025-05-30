@@ -21,7 +21,7 @@ function AdminDashbaord(){
                 <div className="card"> Delete User</div>
             </div>
         <SubmitBookModal  isOpen={showSubmitModal} onClose={()=>setShowSubmitModal(false)}/>
-            <UserRegistrationModal show={showUserModal} handleClose={()=>setShowUserModal(false)} />
+        <UserRegistrationModal show={showUserModal} handleClose={()=>setShowUserModal(false)} />
         </div>
     )
 }
