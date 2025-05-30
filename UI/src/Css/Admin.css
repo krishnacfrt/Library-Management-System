@@ -7,15 +7,22 @@
 }
 
 .card{
-    height: 200px;
+    height: 190px;
     width: 200px;
     display: flex;
     justify-content: center;
     font-size: large;
     font-weight: 500;
+    box-shadow: rgb(148, 215, 215) ;
 }
 .row{
     display: flex;
     flex-direction: row;
     column-gap: 50px;
+}
+
+.card:hover{
+    background-color: rgb(148, 215, 215);
+    font-size: large;
+    color: rgb(255, 255, 255);
 }
