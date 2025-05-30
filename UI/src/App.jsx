@@ -11,9 +11,7 @@ function App() {
     <>
       <BrowserRouter>
         <ToastContainer />
-        <div>
-          <Navbar />
-        </div>
+        <Navbar />
         <AppRoutes />
       </BrowserRouter>
     </>
