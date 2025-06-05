@@ -14,7 +14,9 @@
     font-size: large;
     font-weight: 500;
     box-shadow: rgb(148, 215, 215) ;
+    transition: all 0.2s ease-in-out;
 }
+
 .row{
     display: flex;
     flex-direction: row;
@@ -25,4 +27,6 @@
     background-color: rgb(148, 215, 215);
     font-size: large;
     color: rgb(255, 255, 255);
+    transform: scale(1.05); /* Slightly enlarges */
+    border-radius: 10px
 }

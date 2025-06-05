@@ -1,9 +1,12 @@
+
+body{
+    font-family:"Roboto";
+}
+
 .container{
     background-color: rgb(255, 255, 255);
     display: flex;
     margin-top: 60px;
-    width: 100vw;
-    height: 100vh;
     justify-content: center;
     align-items: center;
     gap: 20px;
@@ -24,12 +27,18 @@
     background: rgb(255, 255, 255);
     width: 200px;
     height:200px;
-    border-radius: 8%;
-    padding: 10%;
+    border-radius: 10px;
+    padding: 5%;
     box-sizing: border-box;
     box-shadow: 0px 4px 10px rgb(148, 215, 215);
     display: flex;
     align-items: center;
+    flex-direction: column;
+    align-items: center;
+}
+.card i{
+    font-size: 28px;
+    margin: 5px;
 }
 
 .card a{
@@ -39,10 +48,24 @@
 }
 
 .card a:hover{
-    border-radius: 7%;
+    border-radius: 10px;
     height: 23px;
     width: auto;
     padding: 6px;
     color: white;
 }
-
+.count-card{
+    background: rgb(80, 185, 180);
+    width: 200px;
+    height:100px;
+    border-radius: 5px;
+    /* padding: 5%; */
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+    align-items: center;
+}
+.count-card h2, p{
+    margin: 0;
+    color: white;
+}
