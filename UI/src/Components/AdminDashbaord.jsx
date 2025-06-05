@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import "../Css/Admin.css";
 import SubmitBookModal from "../Modals/SubmitBookModal.jsx";
 import UserRegistrationModal from "../Modals/RegisterUserModal.jsx";
+import DeleteUserModal from "../Modals/DeleteUserModal.jsx";
 
 function AdminDashbaord() {
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   return (
     <div className="container">
@@ -35,7 +37,7 @@ function AdminDashbaord() {
           </div>
         </div>
         <div>
-          <div className="card">
+          <div className="card" onClick={() => setShowDeleteModal(true)}>
             <div className="card-icon">
               <i class="fa-solid fa-trash-can"></i>
             </div>
@@ -51,6 +53,10 @@ function AdminDashbaord() {
         show={showUserModal}
         handleClose={() => setShowUserModal(false)}
       />
+      <DeleteUserModal 
+        show={showDeleteModal}
+        handleClose={() => setShowDeleteModal(false)}
+       />
     </div>
   );
 }
