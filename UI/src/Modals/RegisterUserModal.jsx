@@ -20,8 +20,7 @@ const UserRegistrationModal = ({ show, handleClose }) => {
     e.preventDefault();
     try {
       const resp= await axios.post("/users", formData);
-      toast.success(`User registered successfully!${ resp}`);
-      console.log({resp})
+      toast.success(`User registered successfully!`);
       handleClose();
     } catch (error) {
       toast.error("Registration failed!");
