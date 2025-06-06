@@ -9,7 +9,10 @@ app = FastAPI()
 @app.post("/users", status_code=status.HTTP_201_CREATED)
 async def create_user(user: User):
     user.save_to_db()
-    return {"message": "User added to the database", "user": user}
+    userId = user.get_last_commit()
+    details = {"userDetail": user}
+    details["userId"] = userId
+    return {"message": "User added to the database", "user": details}
 
 
 @app.get("/users", status_code=status.HTTP_200_OK)
