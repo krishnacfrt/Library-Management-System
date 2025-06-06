@@ -15,7 +15,7 @@ async def create_user(user: User):
     return {"message": "User added to the database", "user": details}
 
 
-@app.delete("/user/{user_id}")
+@app.delete("/users/{user_id}")
 async def delete_user(user_id: int):
     isValidUser = validate_user(user_id)
     if isValidUser:
@@ -31,7 +31,7 @@ async def getUsers():
     return {"message": "Users fetched successfully", "users": users}
 
 
-@app.post("/book", status_code=status.HTTP_201_CREATED)
+@app.post("/books", status_code=status.HTTP_201_CREATED)
 async def add_book(book: Book):
     msg = book.save_to_db()
     return {"message": msg}
