@@ -50,21 +50,17 @@ function AdminDashbaord() {
             <a href="/home"> Go to books </a>
           </div>
         </div>
-        <div>
-          <div className="card" onClick={() => setShowDeleteModal(true)}>
-            <div className="card-icon">
-              <i class="fa-solid fa-trash-can"></i>
-            </div>
-            <div> Delete User</div>
+        <div className="card" onClick={() => setShowDeleteModal(true)}>
+          <div className="card-icon">
+            <i class="fa-solid fa-trash-can"></i>
           </div>
+          <div> Delete User</div>
         </div>
-        <div>
-          <div className="card" onClick={() => setShowDeleteModal(true)}>
-            <div className="card-icon">
-              <i class="fa-solid fa-users"></i>
-            </div>
-            <div> All Users</div>
+        <div className="card" onClick={() => setShowDeleteModal(true)}>
+          <div className="card-icon">
+            <i class="fa-solid fa-users"></i>
           </div>
+          <div> All Users</div>
         </div>
       </div>
       </div>
