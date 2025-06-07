@@ -10,7 +10,9 @@ const SubmitBookModal = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null; 
-
+  // example for /books get api call to show all book list, similarly for post
+  const res= axios.get('/books').then(res=>res.data)
+  console.log(res)
   const handleSubmit = () => {
     setLoading(true);
     setMessage("");

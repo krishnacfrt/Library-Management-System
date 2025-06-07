@@ -1,7 +1,7 @@
 from fastapi import FastAPI, status
 from Utils.User import User
 from Utils.util import get_users
-from Utils.Book import Book, getBooks
+from Utils.Book import Book, getBooks, drptable, createTableBook, addBook
 
 app = FastAPI()
 
@@ -20,11 +20,14 @@ async def getUsers():
 
 @app.post("/book", status_code=status.HTTP_201_CREATED)
 async def add_book(book: Book):
+    createTableBook()
     msg = book.save_to_db()
     return {"message": msg}
 
 
 @app.get("/books", status_code=status.HTTP_200_OK)
 async def get_books():
+    # drptable()
+    createTableBook()
     res = getBooks()
     return {"message": "Books fetched successfully", "books": res}
