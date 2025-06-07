@@ -1,20 +1,44 @@
-.container{
+.admin-container{
     display:flex;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: space-around;
     align-items: center;
-    row-gap: 40px;
-    column-gap: 40px;
+    row-gap: 20px;
+    column-gap: 20px;
+    margin-top: 100px;
 }
-
+.container-child{
+    width: 50%;
+}
+.container-child h3,p{
+    color: black;
+}
+.divider{
+    height: 100%;
+    width: fit-content;
+    background-color: red;
+    border-right: 1px solid black;
+}
+.container-child-admin{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.container-child-admin i{
+    font-size: 50px;
+    color: rgb(148, 215, 215) ;
+}
 .card{
-    height: 190px;
+    height: 150px;
     width: 200px;
     display: flex;
     justify-content: center;
     font-size: large;
     font-weight: 500;
-    box-shadow: rgb(148, 215, 215) ;
+    box-shadow:1px rgb(148, 215, 215) ;
     transition: all 0.2s ease-in-out;
+    border-radius: 5px;
+    margin: 20px 0;
 }
 
 .row{
@@ -28,6 +52,6 @@
     font-size: large;
     color: rgb(255, 255, 255);
     transform: scale(1.05); /* Slightly enlarges */
-    border-radius: 10px;
+    border-radius: 5px;
     cursor: pointer;
 }

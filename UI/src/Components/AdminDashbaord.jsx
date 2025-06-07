@@ -10,7 +10,13 @@ function AdminDashbaord() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   return (
-    <div className="container">
+    <div className="admin-container">
+      <div className="container-child container-child-admin">
+        <i class="fa-solid fa-user-tie"></i>
+        <h3>Admin Name</h3>
+        <p>Admin id</p>
+      </div>
+      <div className="container-child">
       <div className="row">
         <div className="card" onClick={() => setShowSubmitModal(true)}>
           {" "}
@@ -25,6 +31,14 @@ function AdminDashbaord() {
             <i class="fa-solid fa-address-card"></i>
           </div>
           Register User
+        </div>
+        <div className="card">
+          <div className="card-icon">
+            <i class="fa-regular fa-rectangle-list"></i>
+          </div>
+          <div>
+            <a href="/home"> Assign Books </a>
+          </div>
         </div>
       </div>
       <div className="row">
@@ -44,6 +58,15 @@ function AdminDashbaord() {
             <div> Delete User</div>
           </div>
         </div>
+        <div>
+          <div className="card" onClick={() => setShowDeleteModal(true)}>
+            <div className="card-icon">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div> All Users</div>
+          </div>
+        </div>
+      </div>
       </div>
       <SubmitBookModal
         isOpen={showSubmitModal}
