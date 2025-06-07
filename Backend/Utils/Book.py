@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-from database import cur, db
+from Utils.database import cur, db
 
 
 class Book(BaseModel):

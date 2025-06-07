@@ -2,6 +2,9 @@ from fastapi import FastAPI, status, HTTPException
 from Utils.User import User
 from Utils.util import get_users, validate_user, remove_user
 from Utils.Book import Book, getBooks, drptable, createTableBook, addBook
+from Utils.Transaction import Transaction, SubmitBook
+from Utils.Log import Log
+from Utils.database import cur, db
 
 app = FastAPI()
 
@@ -44,3 +47,59 @@ async def get_books():
     createTableBook()
     res = getBooks()
     return {"message": "Books fetched successfully", "books": res}
+
+
+@app.delete("/books/{book_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_book(book_id: int):
+    createTableBook()
+    query = "DELETE FROM newBooks WHERE bookid = %s"
+    cur.execute(query, (book_id,))
+    db.commit()
+    return {"message": "Book deleted successfully"}
+
+
+@app.post("/transaction", status_code=status.HTTP_201_CREATED)
+async def add_transaction(books: Transaction):
+    log = Log()
+    books.createTransactionTable()
+    if not books.books:
+        raise HTTPException(status_code=400, detail="No books provided for transaction")
+
+    if not validate_user(books.userId):
+        raise HTTPException(status_code=404, detail="User not found")
+
+    res = books.assignBook(log)
+    return {"message": "Transaction completed successfully", "details": res}
+
+
+@app.post("/submit", status_code=status.HTTP_201_CREATED)
+async def submit_book(submit: SubmitBook):
+    log = Log()
+
+    res = submit.submit(log)
+    if "error" in res:
+        raise HTTPException(status_code=404, detail=res["error"])
+
+    return {"message": "Book submitted successfully", "details": res}
+
+
+@app.get("/logs", status_code=status.HTTP_200_OK)
+async def get_logs():
+    log = Log()
+    logs = log.getLogs()
+    if not logs:
+        raise HTTPException(status_code=404, detail="No logs found")
+    return {"message": "Logs fetched successfully", "logs": logs}
+
+
+@app.get("/transactions", status_code=status.HTTP_200_OK)
+async def get_transactions():
+    query = "SELECT * FROM transactionDetail"
+    cur.execute(query)
+    transactions = cur.fetchall()
+    if not transactions:
+        raise HTTPException(status_code=404, detail="No transactions found")
+    return {
+        "message": "Transactions fetched successfully",
+        "transactions": transactions,
+    }

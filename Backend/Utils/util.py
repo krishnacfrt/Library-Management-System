@@ -1,4 +1,4 @@
-from database import cur, db
+from Utils.database import cur, db
 
 
 def get_users():
