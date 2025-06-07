@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from database import cur, db
+from Utils.database import cur, db
 
 
 class User(BaseModel):
