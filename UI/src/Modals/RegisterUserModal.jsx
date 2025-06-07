@@ -7,7 +7,6 @@ import "../Css/RegisterUser.css";
 
 const UserRegistrationModal = ({ show, handleClose }) => {
   const [formData, setFormData] = useState({
-    userId: "",
     name: "",
     email: "",
     contact: "",
@@ -20,8 +19,8 @@ const UserRegistrationModal = ({ show, handleClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/users", formData);
-      toast.success("User registered successfully!");
+      const resp= await axios.post("/users", formData);
+      toast.success(`User registered successfully!`);
       handleClose();
     } catch (error) {
       toast.error("Registration failed!");
@@ -39,10 +38,6 @@ const UserRegistrationModal = ({ show, handleClose }) => {
         <Modal.Body>
           <h4 className="modal-title">User Registration</h4>
           <Form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label className="form-label">User ID:</label>
-              <input type="text" className="form-control" name="userId" onChange={handleChange} required />
-            </div>
             <div className="form-group">
               <label className="form-label">Name:</label>
               <input type="text" className="form-control" name="name" onChange={handleChange} required />
