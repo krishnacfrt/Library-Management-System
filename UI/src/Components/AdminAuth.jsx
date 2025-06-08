@@ -21,7 +21,7 @@ const AdminAuth = () => {
         username: userId,
         password,
       });
-      console.log(response)
+
       if (response.status === 200) {
         dispatch(setUserDetails(userId));
         dispatch(setShowAuthPage(false));
