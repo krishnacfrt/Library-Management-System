@@ -1,26 +1,28 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../Css/AdminAuth.css";
+import { useSelector, useDispatch } from "react-redux";
+import { setShowAuthPage, setUserDetails, setAuthentication } from "../redux/adminAuthSlice";
 
-const AdminAuth = ({ onSuccess, showAuthPage }) => {
+const AdminAuth = () => {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const {showAuthPage}= useSelector((state)=> state.adminAuth)
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setLoading(true);
-    onSuccess();
     try {
       const response = await axios.post("/api/admin/auth", {
         userId,
         password,
       });
-      onSuccess()
       if (response.status === 200) {
-        onSuccess();
+        dispatch(setUserDetails(userId));
+        dispatch(setAuthPage(false));
+        dispatch(setAuthentication(true));
       }
     } catch (err) {
       setError("Authentication unsuccessful. Please try again.");

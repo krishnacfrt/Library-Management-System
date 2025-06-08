@@ -4,19 +4,19 @@ import SubmitBookModal from "../Modals/SubmitBookModal.jsx";
 import UserRegistrationModal from "../Modals/RegisterUserModal.jsx";
 import DeleteUserModal from "../Modals/DeleteUserModal.jsx";
 import AdminAuth from "./AdminAuth.jsx";
+import { useSelector } from "react-redux";
+
+
 
 function AdminDashbaord() {
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [authUser, setAuthUser] = useState(false)
-  const handleAuthSuccess = () => {
-    setAuthUser(true);  
-  }
+  const {isAuthenticated}= useSelector((state)=> state.adminAuth)
   return (
     <div>
-    {!authUser?
-   <AdminAuth onSuccess={handleAuthSuccess} showAuthPage={!authUser} /> :
+    {!isAuthenticated?
+   <AdminAuth /> :
     <div className="admin-container">
       <div className="container-child container-child-admin">
         <i class="fa-solid fa-user-tie"></i>
