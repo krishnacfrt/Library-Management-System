@@ -5,7 +5,8 @@ import UserRegistrationModal from "../Modals/RegisterUserModal.jsx";
 import DeleteUserModal from "../Modals/DeleteUserModal.jsx";
 import AdminAuth from "./AdminAuth.jsx";
 import { useSelector } from "react-redux";
-
+import AddBooksModal from "../Modals/AddBooksModal.jsx";
+import AssignBooksModal from "../Modals/AssignBooksModal.jsx";
 
 
 function AdminDashbaord() {
@@ -13,7 +14,10 @@ function AdminDashbaord() {
   const [showUserModal, setShowUserModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const {isAuthenticated}= useSelector((state)=> state.adminAuth)
+  const [showAddBooksModal, setShowAddBooksModal] = useState(false);
+  const [showAssignBooksModal, setShowAssignBooksModal] = useState(false);
   return (
+    <>
     <div>
     {!isAuthenticated?
    <AdminAuth /> :
@@ -39,13 +43,11 @@ function AdminDashbaord() {
           </div>
           Register User
         </div>
-        <div className="card">
+        <div className="card" onClick={() => setShowAssignBooksModal(true)}>
           <div className="card-icon">
             <i class="fa-regular fa-rectangle-list"></i>
           </div>
-          <div>
-            <a href="/home"> Assign Books </a>
-          </div>
+            Assign Books
         </div>
       </div>
       <div className="row">
@@ -85,7 +87,18 @@ function AdminDashbaord() {
         show={showDeleteModal}
         handleClose={() => setShowDeleteModal(false)}
        />
+       <AssignBooksModal show={showAssignBooksModal}
+       handleClose={()=>setShowAssignBooksModal(false)}
+       />
     </div>
+    <div className="addbooks-btn" >
+        <button onClick={() => setShowAddBooksModal(true)}>+ Add Books</button>
+        <AddBooksModal 
+        show={showAddBooksModal}
+        handleClose={() => setShowAddBooksModal(false)}
+       />
+    </div>
+    </>
   );
 }
 

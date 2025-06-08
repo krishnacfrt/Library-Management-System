@@ -61,3 +61,9 @@ h1 {
     margin: 0;
     width: max-content;
 }
+
+.addbooks-btn{
+    display: flex;
+    flex-direction: row-reverse;
+    margin:0 30px;
+}
