@@ -5,6 +5,7 @@ import UserRegistrationModal from "../Modals/RegisterUserModal.jsx";
 import DeleteUserModal from "../Modals/DeleteUserModal.jsx";
 import AdminAuth from "./AdminAuth.jsx";
 import { useSelector } from "react-redux";
+import AddBooksModal from "../Modals/AddBooksModal.jsx";
 
 
 
@@ -13,7 +14,10 @@ function AdminDashbaord() {
   const [showUserModal, setShowUserModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const {isAuthenticated}= useSelector((state)=> state.adminAuth)
+  const [showAddBooksModal, setShowAddBooksModal] = useState(false);
+
   return (
+    <>
     <div>
     {!isAuthenticated?
    <AdminAuth /> :
@@ -86,6 +90,14 @@ function AdminDashbaord() {
         handleClose={() => setShowDeleteModal(false)}
        />
     </div>
+    <div className="addbooks-btn" >
+        <button onClick={() => setShowAddBooksModal(true)}>+ Add Books</button>
+        <AddBooksModal 
+        show={showAddBooksModal}
+        handleClose={() => setShowAddBooksModal(false)}
+       />
+    </div>
+    </>
   );
 }
 
