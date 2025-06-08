@@ -16,14 +16,12 @@ const AdminAuth = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(setUserDetails(userId));
-    dispatch(setShowAuthPage(false));
-    dispatch(setAuthentication(true));
     try {
-      const response = await axios.post("/api/admin/auth", {
-        userId,
+      const response = await axios.post("/librarian/authenticate", {
+        username: userId,
         password,
       });
+      console.log(response)
       if (response.status === 200) {
         dispatch(setUserDetails(userId));
         dispatch(setShowAuthPage(false));

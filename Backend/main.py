@@ -5,7 +5,12 @@ from Utils.Book import Book, getBooks, drptable, createTableBook, addBook
 from Utils.Transaction import Transaction, SubmitBook
 from Utils.Log import Log
 from Utils.database import cur, db
-from Utils.auth_service import authenticate_librarian, register_admin
+from Utils.auth_service import (
+    authenticate_librarian,
+    register_admin,
+    Auth,
+    RegisterLibrarian,
+)
 
 app = FastAPI()
 
@@ -107,7 +112,9 @@ async def get_transactions():
 
 
 @app.post("/librarian/authenticate", status_code=status.HTTP_200_OK)
-async def authenticate_librarian_endpoint(username: str, password: str):
+async def authenticate_librarian_endpoint(auth: Auth):
+    username = auth.username
+    password = auth.password
     result = authenticate_librarian(username, password)
     if not result["success"]:
         raise HTTPException(status_code=401, detail=result["message"])
@@ -115,7 +122,10 @@ async def authenticate_librarian_endpoint(username: str, password: str):
 
 
 @app.post("/librarian/register", status_code=status.HTTP_201_CREATED)
-async def register_librarian(username: str, password: str, security_code: str):
+async def register_librarian(args: RegisterLibrarian):
+    username = args.username
+    password = args.password
+    security_code = args.security_code
     try:
         result = register_admin(username, password, security_code)
         return {"message": result["message"], "user_id": result["user_id"]}

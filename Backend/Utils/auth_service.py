@@ -1,7 +1,19 @@
 import bcrypt
 from Utils.database import db, cur as cursor
+from pydantic import BaseModel
 
 ADMIN_SECURITY_CODE = "SECRET123"
+
+
+class Auth(BaseModel):
+    username: str
+    password: str
+
+
+class RegisterLibrarian(BaseModel):
+    username: str
+    password: str
+    security_code: str
 
 
 def hash_password(password: str) -> str:
