@@ -1,5 +1,5 @@
 import React from "react";
-import StudentTable from "./StudentTable";
+import LMTable from "../Util/LMTable";
 
 function StudentDashbaord() {
   const headingStyle = {
@@ -8,21 +8,16 @@ function StudentDashbaord() {
     fontSize: "2.5rem",
     fontWeight: "bold",
     color: "#2c3e50",
-    fontFamily: "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
-    animation: "fadeIn 1s ease-in-out",
-  };
-
-  const containerStyle = {
-    animation: "fadeIn 1s ease-in-out",
+    fontFamily: "Roboto",
   };
   
   return (
     <>
-      <div style={containerStyle}>
+      <div>
         <h1 style={headingStyle}>Welcome to Student Page</h1>
       </div>
       <div>
-        <StudentTable />
+        <LMTable />
       </div>
     </>
   );
