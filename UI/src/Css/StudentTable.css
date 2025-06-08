@@ -2,9 +2,9 @@
 
 .student-table-container {
   padding: 2rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Roboto";
   background: #f4f6f8;
-  min-height: 100vh;
+  min-height: 100vh;  
 }
 
 .title {
