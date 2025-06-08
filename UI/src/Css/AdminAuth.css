@@ -8,7 +8,7 @@
 
 .admin-auth-form {
     background: #fff;
-    padding: 2.5rem 2rem;
+    padding: 2.5rem 3rem;
     border-radius: 12px;
     box-shadow: 0 4px 24px rgba(0,0,0,0.08);
     display: flex;
@@ -39,6 +39,7 @@
     font-size: 1rem;
     outline: none;
     transition: border 0.2s;
+    width: 90%;
 }
 
 .admin-auth-form input:focus {
@@ -82,4 +83,16 @@
 
 .auth-error button:hover {
     background: #b71c1c;
+}
+
+.not-registered-block{
+    margin-top: .5rem;
+    text-align: right;
+    color: #1a3a4f;
+    display: inline;
+}
+.not-registered-block button{
+    display: inline;
+    background: transparent;
+    color: black;
 }

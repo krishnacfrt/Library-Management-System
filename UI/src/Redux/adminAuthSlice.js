@@ -7,6 +7,7 @@ const adminAuthSlice = createSlice({
     isAuthenticated: false,
     error: "",
     showAuthPage: true,
+    showRegisterPage: false,
   },
   reducers: {
     setShowAuthPage: (state, action) => {
@@ -19,6 +20,9 @@ const adminAuthSlice = createSlice({
     setAuthentication: (state, action) => {
       state.isAuthenticated = action.payload;
     },
+    setShowRegisterPage: (state, action) => {
+      state.showRegisterPage = action.payload;
+    },
     logout: (state) => {
       state.isAuthenticated = false;
       state.userId = "";
@@ -27,7 +31,7 @@ const adminAuthSlice = createSlice({
   },
 });
 
-export const { setAuthentication, setUserDetails, logout, setShowAuthPage } =
+export const { setAuthentication, setUserDetails, logout, setShowAuthPage, setShowRegisterPage } =
   adminAuthSlice.actions;
 
 export default adminAuthSlice.reducer;

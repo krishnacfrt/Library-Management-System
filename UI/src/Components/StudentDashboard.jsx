@@ -14,9 +14,6 @@ function StudentDashbaord() {
   return (
     <>
       <div>
-        <h1 style={headingStyle}>Welcome to Student Page</h1>
-      </div>
-      <div>
         <LMTable />
       </div>
     </>

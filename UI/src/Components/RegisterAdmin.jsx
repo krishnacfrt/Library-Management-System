@@ -2,32 +2,35 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../Css/AdminAuth.css";
 import { useSelector, useDispatch } from "react-redux";
-import { setShowAuthPage, setUserDetails, setAuthentication, setShowRegisterPage } from "../redux/adminAuthSlice";
-import RegisterAdmin from "./RegisterAdmin";
+import { setShowAuthPage, setShowRegisterPage } from "../redux/adminAuthSlice";
 
-const AdminAuth = () => {
+const RegisterAdmin = () => {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const {showAuthPage, showRegisterPage}= useSelector((state)=> state.adminAuth)
+  const {showRegisterPage, showAuthPage}= useSelector((state)=> state.adminAuth)
   const dispatch = useDispatch();
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(setUserDetails(userId));
-    dispatch(setShowAuthPage(false));
-    dispatch(setAuthentication(true));
+    // dispatch(setShowRegisterPage(false));
+    // dispatch(setShowAuthPage(true));
     try {
+        if (password !== confirmPassword) {
+            setError("Passwords do not match. Please try again."); 
+            throw new Error('passwords do not match');
+            return
+         }
+        setLoading(false);
       const response = await axios.post("/api/admin/auth", {
         userId,
         password,
       });
       if (response.status === 200) {
-        dispatch(setUserDetails(userId));
-        dispatch(setShowAuthPage(false));
-        dispatch(setAuthentication(true));
+        dispatch(setAuthPage(true));
+        dispatch(setShowRegisterPage(false));
       }
     } catch (err) {
       setError("Authentication unsuccessful. Please try again.");
@@ -41,16 +44,14 @@ const AdminAuth = () => {
     setUserId("");
     setPassword("");
   };
-  if (showRegisterPage) {
-    return <RegisterAdmin />;
-  }
+
   return (
     <>
-      { showAuthPage ?
+      {showRegisterPage ?
       <div className="admin-auth-container">
         <form className="admin-auth-form" onSubmit={handleSubmit}>
-          <h2>Admin Login</h2>
-          <label htmlFor="userId">Admin User ID</label>
+          <h2>Admin Registration</h2>
+          <label htmlFor="userId">Set Admin User ID</label>
           <input
             id="userId"
             type="text"
@@ -67,6 +68,14 @@ const AdminAuth = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          <label htmlFor="confirmPassword">Confirm Password</label>
+           <input
+            id="password"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
           <button type="submit" disabled={loading}>
             {loading ? "Authenticating..." : "Login"}
           </button>
@@ -79,25 +88,24 @@ const AdminAuth = () => {
             </div>
           )}
           <div className="not-registered-block">
-            <span>Not registered? </span>
+            <span>Already registered? </span>
             <button
               type="button"
               className="register-link"
-              onClick={()=> {
-                dispatch(setShowRegisterPage(true))
-                dispatch(setShowAuthPage(false));
-              }}
+              onClick={()=>{
+                 dispatch(setShowRegisterPage(false))
+                 dispatch(setShowAuthPage(true))}
+                }
             >
-              Register Now
+              Login
             </button>
           </div>
         </form>
-      </div> : <div> 
-        <RegisterAdmin />
-      </div>
+      </div> : 
+      <div></div>
       }
     </>
   );
 };
 
-export default AdminAuth;
+export default RegisterAdmin;
