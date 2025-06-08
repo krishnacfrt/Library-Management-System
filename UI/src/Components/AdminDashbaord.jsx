@@ -3,13 +3,20 @@ import "../Css/Admin.css";
 import SubmitBookModal from "../Modals/SubmitBookModal.jsx";
 import UserRegistrationModal from "../Modals/RegisterUserModal.jsx";
 import DeleteUserModal from "../Modals/DeleteUserModal.jsx";
+import AdminAuth from "./AdminAuth.jsx";
 
 function AdminDashbaord() {
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
+  const [authUser, setAuthUser] = useState(false)
+  const handleAuthSuccess = () => {
+    setAuthUser(true);  
+  }
   return (
+    <div>
+    {!authUser?
+   <AdminAuth onSuccess={handleAuthSuccess} showAuthPage={!authUser} /> :
     <div className="admin-container">
       <div className="container-child container-child-admin">
         <i class="fa-solid fa-user-tie"></i>
@@ -64,6 +71,8 @@ function AdminDashbaord() {
         </div>
       </div>
       </div>
+    </div>
+  }
       <SubmitBookModal
         isOpen={showSubmitModal}
         onClose={() => setShowSubmitModal(false)}
