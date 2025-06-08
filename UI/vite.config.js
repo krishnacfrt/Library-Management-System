@@ -7,7 +7,8 @@ export default defineConfig({
    server: {
         proxy: {
             '/user': 'http://127.0.0.1:8000',
-            '/books':'http://127.0.0.1:8000'
+            '/books':'http://127.0.0.1:8000',
+            "/librarian": 'http://127.0.0.1:8000',
         }
     }
 

@@ -24,9 +24,10 @@ const RegisterAdmin = () => {
             return
          }
         setLoading(false);
-      const response = await axios.post("/api/admin/auth", {
-        userId,
+      const response = await axios.post("/librarian/register", {
+        username:userId,
         password,
+        security_code: 'SECRET123'
       });
       if (response.status === 200) {
         dispatch(setAuthPage(true));
