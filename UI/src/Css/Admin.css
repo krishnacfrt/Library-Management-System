@@ -52,3 +52,12 @@
     border-radius: 5px;
     cursor: pointer;
 }
+
+h1 {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    width: max-content;
+}
