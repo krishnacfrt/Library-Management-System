@@ -24,7 +24,7 @@ const RegisterAdmin = () => {
             return
          }
         setLoading(false);
-      const response = await axios.post("/librarian/register", {
+      const response = await axios.post("/admin/register", {
         username:userId,
         password,
         security_code: 'SECRET123'

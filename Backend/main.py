@@ -111,7 +111,7 @@ async def get_transactions():
     }
 
 
-@app.post("/librarian/authenticate", status_code=status.HTTP_200_OK)
+@app.post("/admin/authenticate", status_code=status.HTTP_200_OK)
 async def authenticate_librarian_endpoint(auth: Auth):
     username = auth.username
     password = auth.password
@@ -121,7 +121,7 @@ async def authenticate_librarian_endpoint(auth: Auth):
     return {"message": result["message"]}
 
 
-@app.post("/librarian/register", status_code=status.HTTP_201_CREATED)
+@app.post("/admin/register", status_code=status.HTTP_201_CREATED)
 async def register_librarian(args: RegisterLibrarian):
     username = args.username
     password = args.password

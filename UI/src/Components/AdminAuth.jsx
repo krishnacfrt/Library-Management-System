@@ -17,7 +17,7 @@ const AdminAuth = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/librarian/authenticate", {
+      const response = await axios.post("/admin/authenticate", {
         username: userId,
         password,
       });
