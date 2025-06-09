@@ -25,7 +25,8 @@
   margin-right: 15px;
 } */
 
-.modal-content{
-    width: 100%;
+.assign-custom-modal .modal-content {
+  width: 100%;
+  max-width: none;
 }
 
