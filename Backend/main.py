@@ -138,21 +138,47 @@ from fastapi import Query
 
 @app.get("/books", status_code=status.HTTP_200_OK)
 async def get_books(
-    page: int = Query(1, ge=1), page_size: int = Query(10, ge=1, le=100)
+    page: int = Query(1, ge=1),
+    page_size: int = Query(10, ge=1, le=100),
+    search_column: str = Query(None),
+    search_value: str = Query(None),
 ):
-    createTableBook()
     offset = (page - 1) * page_size
-    query = "SELECT * FROM newBooks LIMIT %s OFFSET %s"
-    cur.execute(query, (page_size, offset))
+
+    # Basic SQL injection protection: only allow certain columns
+    allowed_columns = {
+        "title",
+        "author",
+        "category",
+        "standard",
+    }  # add your columns here
+    where_clause = ""
+    params = []
+
+    if search_column and search_value and search_column in allowed_columns:
+        where_clause = f"WHERE {search_column} LIKE %s"
+        params.append(f"%{search_value}%")
+
+    query = f"SELECT * FROM newBooks {where_clause} LIMIT %s OFFSET %s"
+    params.extend([page_size, offset])
+    cur.execute(query, tuple(params))
     books = cur.fetchall()
 
-    # Check if there are more books for the next page
-    cur.execute("SELECT COUNT(*) FROM newBooks")
+    cur.execute(f"SELECT COUNT(*) FROM newBooks {where_clause}", tuple(params[:-2]))
     row = cur.fetchone()
     total_books = list(row.values())[0]
     has_next = offset + page_size < total_books
 
-    next_page_params = {"page": page + 1, "page_size": page_size} if has_next else None
+    next_page_params = (
+        {
+            "page": page + 1,
+            "page_size": page_size,
+            "search_column": search_column,
+            "search_value": search_value,
+        }
+        if has_next
+        else None
+    )
 
     return {
         "message": "Books fetched successfully",
