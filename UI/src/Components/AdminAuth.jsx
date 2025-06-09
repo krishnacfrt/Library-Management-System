@@ -4,6 +4,7 @@ import "../Css/AdminAuth.css";
 import { useSelector, useDispatch } from "react-redux";
 import { setShowAuthPage, setUserDetails, setAuthentication, setShowRegisterPage } from "../redux/adminAuthSlice";
 import RegisterAdmin from "./RegisterAdmin";
+import { toast } from "react-toastify";
 
 const AdminAuth = () => {
   const [userId, setUserId] = useState("");
@@ -26,9 +27,11 @@ const AdminAuth = () => {
         dispatch(setUserDetails(userId));
         dispatch(setShowAuthPage(false));
         dispatch(setAuthentication(true));
+        toast.success("Successfully logged In!");
       }
     } catch (err) {
       setError("Authentication unsuccessful. Please try again.");
+      toast.error("Authentication unsuccessful. Please try again.");
     } finally {
       setLoading(false);
     }
