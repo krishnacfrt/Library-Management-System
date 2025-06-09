@@ -188,3 +188,15 @@ async def get_books(
         "page": page,
         "page_size": page_size,
     }
+
+
+@app.get("/transaction/{bookid}", status_code=status.HTTP_200_OK)
+async def get_transaction_by_bookid(bookid: int):
+    query = "SELECT * FROM transactionDetail WHERE bookid = %s"
+    cur.execute(query, (bookid,))
+    transaction = cur.fetchone()
+    if not transaction:
+        raise HTTPException(
+            status_code=404, detail="No transaction found for this book"
+        )
+    return transaction
