@@ -87,7 +87,7 @@ function LMTable() {
     const {data: tableData, fetchNextPage, hasNextPage, isFetchingNextPage, fetchPreviousPage} = useBooks();
     console.log(tableData, 'inside lm table'); // This will log the flattened array of book results
     console.log(hasNextPage); // This will log whether there are more pages to fetch
-  // fetchNextPage();
+
   const goToPreviousPage = () => {
     if (data && data.pageIndex> 1 ) {
       fetchPreviousPage()
