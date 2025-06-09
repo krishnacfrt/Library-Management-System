@@ -1,7 +1,12 @@
 import React from "react";
 import "../Css/Home.css";
+import { useBooks } from "../Css/book.js";
 
 function Home() {
+
+  const {data, fetchNextPage, hasNextPage, isFetchingNextPage} = useBooks();
+  console.log(data); // This will log the flattened array of book results
+  console.log(hasNextPage); // This will log whether there are more pages to fetch
   return (
     <div className="container">
       <div>Welcome to Home page </div>

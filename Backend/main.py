@@ -47,12 +47,12 @@ async def add_book(book: Book):
     return {"message": msg}
 
 
-@app.get("/books", status_code=status.HTTP_200_OK)
-async def get_books():
-    # drptable()
-    createTableBook()
-    res = getBooks()
-    return {"message": "Books fetched successfully", "books": res}
+# @app.get("/books", status_code=status.HTTP_200_OK)
+# async def get_books():
+#     # drptable()
+#     createTableBook()
+#     res = getBooks()
+#     return {"message": "Books fetched successfully", "books": res}
 
 
 @app.delete("/books/{book_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -131,3 +131,34 @@ async def register_librarian(args: RegisterLibrarian):
         return {"message": result["message"], "user_id": result["user_id"]}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+from fastapi import Query
+
+
+@app.get("/books", status_code=status.HTTP_200_OK)
+async def get_books(
+    page: int = Query(1, ge=1), page_size: int = Query(10, ge=1, le=100)
+):
+    createTableBook()
+    offset = (page - 1) * page_size
+    query = "SELECT * FROM newBooks LIMIT %s OFFSET %s"
+    cur.execute(query, (page_size, offset))
+    books = cur.fetchall()
+
+    # Check if there are more books for the next page
+    cur.execute("SELECT COUNT(*) FROM newBooks")
+    row = cur.fetchone()
+    total_books = list(row.values())[0]
+    has_next = offset + page_size < total_books
+
+    next_page_params = {"page": page + 1, "page_size": page_size} if has_next else None
+
+    return {
+        "message": "Books fetched successfully",
+        "books": books,
+        "nextPageParams": next_page_params,
+        "total": total_books,
+        "page": page,
+        "page_size": page_size,
+    }
