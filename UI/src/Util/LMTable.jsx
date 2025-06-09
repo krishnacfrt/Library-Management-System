@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import "./LMTable.css";
 import {
   useReactTable,
@@ -10,6 +9,7 @@ import {
   flexRender,
   createColumnHelper,
 } from "@tanstack/react-table";
+import { useBooks } from "../Css/book";
 
 const defaultData = [
   {
@@ -83,6 +83,21 @@ function LMTable() {
     pageSize: 10,
   });
   const [loading, setLoading] = useState(true);
+
+    const {data: tableData, fetchNextPage, hasNextPage, isFetchingNextPage, fetchPreviousPage} = useBooks();
+    console.log(tableData, 'inside lm table'); // This will log the flattened array of book results
+    console.log(hasNextPage); // This will log whether there are more pages to fetch
+  // fetchNextPage();
+  const goToPreviousPage = () => {
+    if (data && data.pageIndex> 1 ) {
+      fetchPreviousPage()
+    }
+  }
+  const goToNextPage = () => {
+    if (hasNextPage) {
+      fetchNextPage();   
+    }
+  }
 
   const table = useReactTable({
     data,
@@ -190,8 +205,8 @@ function LMTable() {
 
           <div className="pagination-container">
             <button
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
+              onClick={() => goToPreviousPage}
+              disabled={false}
             >
               Previous
             </button>
@@ -203,8 +218,8 @@ function LMTable() {
               </strong>
             </span>
             <button
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
+              onClick={goToNextPage}
+              disabled={!hasNextPage}
             >
               Next
             </button>
