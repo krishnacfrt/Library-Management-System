@@ -23,3 +23,10 @@ export const useBooks = (pageParams={}) => {
     fetchPreviousPage
   };
 };
+
+export function useBooksQuery(pageParams={}) {
+  return useQuery({
+    queryKey: [TABLE_DATA_IMPORT],
+    queryFn: () => fetchBooks(pageParams)
+  })
+};
