@@ -1,5 +1,5 @@
 import React from "react";
-import LMTable from "../Util/LMTable";
+import AssignBookSearchTable from "../Util/AssignBookSearchTable";
 
 function StudentDashbaord() {
   const headingStyle = {
@@ -14,7 +14,7 @@ function StudentDashbaord() {
   return (
     <>
       <div>
-        <LMTable />
+        <AssignBookSearchTable />
       </div>
     </>
   );

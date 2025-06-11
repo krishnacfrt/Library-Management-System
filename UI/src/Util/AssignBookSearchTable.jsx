@@ -10,49 +10,11 @@ import {
   flexRender,
   createColumnHelper,
 } from "@tanstack/react-table";
-
-const defaultData = [
-  {
-    name: "Alice",
-    uniqueID: 25,
-    title: "India",
-    author: "Tmko puja h tmse mohabbat ki h",
-    publishDates: "Chl dk boss dk",
-  },
-  {
-    name: "Bob",
-    uniqueID: 30,
-    title: "USA",
-    author: "Tmko puja h tmse mohabbat ki h",
-    publishDates: "Chl dk boss dk",
-  },
-  {
-    name: "Charlie",
-    uniqueID: 28,
-    title: "UK",
-    author: "Tmko puja h tmse mohabbat ki h",
-    publishDates: "Chl dk boss dk",
-  },
-  {
-    name: "David",
-    uniqueID: 35,
-    title: "Canada",
-    author: "Tmko puja h tmse mohabbat ki h",
-    publishDates: "Chl dk boss dk",
-  },
-  {
-    name: "Eve",
-    uniqueID: 22,
-    title: "Australia",
-    author: "Tmko puja h tmse mohabbat ki h",
-    publishDates: "Chl dk boss dk",
-  },
-];
+import { useBooksQuery } from "../Css/book";
 
 const columnHelper = createColumnHelper();
 
 function AssignBookSearchTable() {
-  const [data, setData] = useState({});
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -61,8 +23,8 @@ function AssignBookSearchTable() {
     pageIndex: 0,
     pageSize: 10,
   });
-  const [loading, setLoading] = useState(true);
-
+  const [columnName, setColumnName] = useState("");
+  const [columnValue, setColumnValue] = useState("");
   const handleCheckboxChange = (rowData) => {
     setSelectedRows((prevSelected) => {
       const exists = prevSelected.some((r) => r.uniqueID === rowData.uniqueID);
@@ -74,14 +36,13 @@ function AssignBookSearchTable() {
     });
   };
 
-    console.log(selectedRows);
   const defaultColumns = [
     {
       id: "select",
       header: "",
       cell: ({ row }) => (
         <input
-          type='checkbox'
+          type="checkbox"
           checked={selectedRows.some(
             (r) => r.uniqueID === row.original.uniqueID
           )}
@@ -111,8 +72,29 @@ function AssignBookSearchTable() {
     }),
   ];
 
+  const searchableColumnNames = ["name", "uniqueid", "author"];
+
+  const {
+    data: tableDataRes,
+    isLoading: loading,
+    refetch: refetchTableRes,
+  } = useBooksQuery({
+    page: pagination.pageIndex + 1,
+    page_size: pagination.pageSize,
+    search_column: columnName,
+    search_value: columnValue,
+  });
+
+  const handleSearch = () => {
+    if (searchableColumnNames.includes(columnName.toLowerCase())) {
+      refetchTableRes();
+    } else {
+      alert("Enter conrrect column name");
+    }
+  };
+
   const table = useReactTable({
-    data,
+    data: tableDataRes.books,
     columns: defaultColumns,
     state: {
       globalFilter,
@@ -128,24 +110,6 @@ function AssignBookSearchTable() {
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  const fetchData = async () => {
-    try {
-      // const response = await axios.get("DUMMY HUN MAI", {
-      //   params: { pageIndex: 0, pageSize: 10 },
-      // });
-      const response = { data: defaultData };
-      setData(response.data);
-    } catch (error) {
-      console.error("Error while fetching data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   return (
     <div>
       {loading ? (
@@ -153,13 +117,44 @@ function AssignBookSearchTable() {
       ) : (
         <div style={{ padding: "2px", maxWidth: "1200px", margin: "auto" }}>
           <input
-            type='text'
+            type="text"
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            placeholder='Search by Book Name, Book Id or Author Name...'
-            className='search-input'
+            placeholder="Search by Book Name, Book Id or Author Name with in table"
+            className="search-input"
           />
-          <table className='lm-table'>
+          <div>
+            <p>Search by Book Name, Book Id or Author Name with in database</p>
+            <input
+              type="text"
+              value={columnName}
+              onChange={(e) => setColumnName(e.target.value)}
+              placeholder="Enter column name"
+              className="search-input"
+            />
+            <input
+              type="text"
+              value={columnValue}
+              onChange={(e) => setColumnValue(e.target.value)}
+              placeholder="Enter column value"
+              className="search-input"
+            />
+            <button
+              onClick={handleSearch}
+              style={{
+                padding: "8px 16px",
+                backgroundColor: "#007bff",
+                color: "#fff",
+                marginLeft: "95%",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              Search
+            </button>
+          </div>
+          <table className="lm-table">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
@@ -199,10 +194,15 @@ function AssignBookSearchTable() {
             </tbody>
           </table>
 
-          <div className='pagination-container'>
+          <div className="pagination-container">
             <button
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
+              onClick={() =>
+                setPagination((prevPagination) => ({
+                  ...prevPagination,
+                  pageIndex: prevPagination.pageIndex - 1,
+                }))
+              }
+              disabled={pagination.pageIndex > 0 ? false : true}
             >
               Previous
             </button>
@@ -214,8 +214,18 @@ function AssignBookSearchTable() {
               </strong>
             </span>
             <button
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
+              onClick={() =>
+                setPagination((prevPagination) => ({
+                  ...prevPagination,
+                  pageIndex: prevPagination.pageIndex + 1,
+                }))
+              }
+              disabled={
+                (pagination.pageIndex + 2) * 10 > tableDataRes.total &&
+                (pagination.pageIndex + 2) * 10 - tableDataRes.total >= 10
+                  ? true
+                  : false
+              }
             >
               Next
             </button>
