@@ -56,7 +56,7 @@ function AdminDashbaord() {
             <i class="fa-solid fa-book"></i> 
           </div>
           <div>
-            <a href="/home"> Go to books </a>
+            Go to books
           </div>
         </div>
         <div className="card" onClick={() => setShowDeleteModal(true)}>

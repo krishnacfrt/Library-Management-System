@@ -18,3 +18,10 @@ class User(BaseModel):
         cur.execute(query)
         lastCommit = cur.fetchall()
         return lastCommit[0]["LAST_INSERT_ID()"]
+
+
+def get_user_by_id(user_id: int):
+    query = "SELECT * FROM users WHERE userId = %s"
+    cur.execute(query, (user_id,))
+    user = cur.fetchone()
+    return user

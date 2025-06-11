@@ -22,7 +22,7 @@ body{
 }
 
 .card{
-    background: rgb(255, 255, 255);
+    background: rgb(31, 74, 81);
     width: 200px;
     height:200px;
     border-radius: 5px;
@@ -33,6 +33,7 @@ body{
     align-items: center;
     flex-direction: column;
     align-items: center;
+    color: white;
 }
 .card i{
     font-size: 28px;

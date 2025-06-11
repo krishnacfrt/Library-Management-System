@@ -1,5 +1,5 @@
 from fastapi import FastAPI, status, HTTPException
-from Utils.User import User
+from Utils.User import User, get_user_by_id
 from Utils.util import get_users, validate_user, remove_user
 from Utils.Book import Book, getBooks, drptable, createTableBook, addBook
 from Utils.Transaction import Transaction, SubmitBook
@@ -38,6 +38,16 @@ async def delete_user(user_id: int):
 async def getUsers():
     users = get_users()
     return {"message": "Users fetched successfully", "users": users}
+
+
+@app.get("/users/{user_id}", status_code=status.HTTP_200_OK)
+async def get_user(user_id: int):
+    isValidUser = validate_user(user_id)
+    if isValidUser:
+        user = get_user_by_id(user_id)
+        return {"message": "User fetched successfully", "user": user}
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
 
 
 @app.post("/books", status_code=status.HTTP_201_CREATED)
