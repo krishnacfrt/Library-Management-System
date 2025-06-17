@@ -25,11 +25,14 @@ class Book(BaseModel):
         return "added book successfully"
 
 
-def getBooks():
-    query = "select * from newBooks"
-    cur.execute(query)
-    books = cur.fetchall()
-    return books
+def getBooks(bookid=None):
+    if bookid:
+        query = "select * from newBooks where bookid = %s"
+        cur.execute(query, (bookid,))
+        books = cur.fetchall()
+        return books
+    else:
+        return "Not found"
 
 
 def drptable():

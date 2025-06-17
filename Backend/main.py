@@ -57,12 +57,10 @@ async def add_book(book: Book):
     return {"message": msg}
 
 
-# @app.get("/books", status_code=status.HTTP_200_OK)
-# async def get_books():
-#     # drptable()
-#     createTableBook()
-#     res = getBooks()
-#     return {"message": "Books fetched successfully", "books": res}
+@app.get("/books{book_id}", status_code=status.HTTP_200_OK)
+async def get_books(book_id: int = None):
+    res = getBooks(book_id)
+    return {"message": "Books fetched successfully", "books": res}
 
 
 @app.delete("/books/{book_id}", status_code=status.HTTP_204_NO_CONTENT)
