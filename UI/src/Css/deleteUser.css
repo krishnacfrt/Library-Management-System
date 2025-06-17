@@ -84,7 +84,7 @@
 /* Submit Button */
 .submit-btn {
   display: block;
-  width: 40%;
+  width: 100%;
   padding: 12px;
   border-radius: 8px;
   background: #007bff;
@@ -93,7 +93,6 @@
   font-weight: bold;
   border: none;
   transition: all 0.3s;
-  margin: 0 auto;
 }
 
 .submit-btn:hover {
