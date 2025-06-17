@@ -41,7 +41,7 @@ body{
 }
 
 .card a{
-    color: black;
+    color: rgb(248, 246, 246);
     text-decoration: none;
     padding: 3px;
 }

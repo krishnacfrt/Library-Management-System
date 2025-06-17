@@ -1,8 +1,7 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-const fetchBooks = async ( params) => {
-  console.log(params, 'params'); // This will log the params being sent to the API
+export const fetchBooks = async ( params ) => {
   return axios.get("/books", { params }).then((res) => res.data);
 };
 
@@ -30,3 +29,11 @@ export function useBooksQuery(pageParams={}) {
     retry: false
   })
 };
+
+export function fetchUsersQuery(){
+  return useQuery({
+    queryKey:'users',
+    queryFn: ()=> axios.get('/users').then(res=>res.data),
+    _defaulted:0
+  })
+}
