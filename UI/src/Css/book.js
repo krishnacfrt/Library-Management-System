@@ -1,10 +1,9 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-const fetchBooks = async ({
-  pageParam = { page: 1, page_size: 10, search_column: "", search_value: "" },
-}) => {
-  return axios.get("/books", { params: pageParam }).then((res) => res.data);
+const fetchBooks = async ( params) => {
+  console.log(params, 'params'); // This will log the params being sent to the API
+  return axios.get("/books", { params }).then((res) => res.data);
 };
 
 export const useBooks = (pageParams={}) => {
@@ -26,7 +25,8 @@ export const useBooks = (pageParams={}) => {
 
 export function useBooksQuery(pageParams={}) {
   return useQuery({
-    queryKey: [TABLE_DATA_IMPORT],
-    queryFn: () => fetchBooks(pageParams)
+    queryKey: ['TABLE_DATA_IMPORT', pageParams],
+    queryFn: () => fetchBooks(pageParams),
+    retry: false
   })
 };

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import "./LMTable.css";
 import {
   useReactTable,
@@ -18,18 +17,19 @@ function AssignBookSearchTable() {
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
-
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
   });
   const [columnName, setColumnName] = useState("");
   const [columnValue, setColumnValue] = useState("");
+
+  // Checkbox logic
   const handleCheckboxChange = (rowData) => {
     setSelectedRows((prevSelected) => {
-      const exists = prevSelected.some((r) => r.uniqueID === rowData.uniqueID);
+      const exists = prevSelected.some((r) => r.bookid === rowData.bookid);
       if (exists) {
-        return prevSelected.filter((r) => r.uniqueID !== rowData.uniqueID);
+        return prevSelected.filter((r) => r.bookid !== rowData.bookid);
       } else {
         return [...prevSelected, rowData];
       }
@@ -44,18 +44,14 @@ function AssignBookSearchTable() {
         <input
           type="checkbox"
           checked={selectedRows.some(
-            (r) => r.uniqueID === row.original.uniqueID
+            (r) => r.bookid === row.original.bookid
           )}
           onChange={() => handleCheckboxChange(row.original)}
         />
       ),
     },
-    columnHelper.accessor("uniqueID", {
+    columnHelper.accessor("bookid", {
       header: "ID",
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor("name", {
-      header: "Name",
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor("title", {
@@ -66,16 +62,17 @@ function AssignBookSearchTable() {
       header: "Author",
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor("publishDates", {
-      header: "Publish Dates",
+    columnHelper.accessor("published_date", {
+      header: "Publish Date",
       cell: (info) => info.getValue(),
     }),
   ];
 
   const searchableColumnNames = ["name", "uniqueid", "author"];
 
+  // Fetch data
   const {
-    data: tableDataRes,
+    data: tableDataRes = {},
     isLoading: loading,
     refetch: refetchTableRes,
   } = useBooksQuery({
@@ -85,16 +82,31 @@ function AssignBookSearchTable() {
     search_value: columnValue,
   });
 
+  // Calculate total pages correctly
+  const totalRows = tableDataRes.total || 0;
+  const totalPages = Math.ceil(totalRows / pagination.pageSize);
+
+  // Fix: update pageIndex if totalPages changes and current page is out of range
+  useEffect(() => {
+    if (pagination.pageIndex > 0 && pagination.pageIndex >= totalPages) {
+      setPagination((prev) => ({
+        ...prev,
+        pageIndex: totalPages > 0 ? totalPages - 1 : 0,
+      }));
+    }
+  }, [totalPages, pagination.pageIndex]);
+
   const handleSearch = () => {
     if (searchableColumnNames.includes(columnName.toLowerCase())) {
       refetchTableRes();
+      setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     } else {
-      alert("Enter conrrect column name");
+      alert("Enter correct column name");
     }
   };
 
   const table = useReactTable({
-    data: tableDataRes.books,
+    data: tableDataRes?.books || [],
     columns: defaultColumns,
     state: {
       globalFilter,
@@ -108,6 +120,8 @@ function AssignBookSearchTable() {
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: true,
+    pageCount: totalPages,
   });
 
   return (
@@ -120,40 +134,44 @@ function AssignBookSearchTable() {
             type="text"
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            placeholder="Search by Book Name, Book Id or Author Name with in table"
+            placeholder="Search by Book Name, Book Id or Author Name within table"
             className="search-input"
           />
-          <div>
-            <p>Search by Book Name, Book Id or Author Name with in database</p>
-            <input
-              type="text"
-              value={columnName}
-              onChange={(e) => setColumnName(e.target.value)}
-              placeholder="Enter column name"
-              className="search-input"
-            />
-            <input
-              type="text"
-              value={columnValue}
-              onChange={(e) => setColumnValue(e.target.value)}
-              placeholder="Enter column value"
-              className="search-input"
-            />
-            <button
-              onClick={handleSearch}
-              style={{
-                padding: "8px 16px",
-                backgroundColor: "#007bff",
-                color: "#fff",
-                marginLeft: "95%",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              Search
-            </button>
-          </div>
+          {/* <div>
+            <p>Search by Book Name, Book Id or Author Name within database</p>
+            <div>
+              <input
+                type="text"
+                value={columnName}
+                onChange={(e) => setColumnName(e.target.value)}
+                placeholder="Enter column name"
+                className="search-input"
+              />
+              <input
+                type="text"
+                value={columnValue}
+                onChange={(e) => setColumnValue(e.target.value)}
+                placeholder="Enter column value"
+                className="search-input"
+              />
+              <button
+                type="button" // <-- This prevents form submission/page reload
+                onClick={handleSearch}
+                style={{
+                  padding: "8px 16px",
+                  backgroundColor: "#007bff",
+                  color: "#fff",
+                  marginLeft: "95%",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                Search
+              </button>
+            </div>
+          </div> */} 
+          {/* todo   */}
           <table className="lm-table">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -196,36 +214,32 @@ function AssignBookSearchTable() {
 
           <div className="pagination-container">
             <button
+              type="button"
               onClick={() =>
-                setPagination((prevPagination) => ({
-                  ...prevPagination,
-                  pageIndex: prevPagination.pageIndex - 1,
+                setPagination((prev) => ({
+                  ...prev,
+                  pageIndex: Math.max(prev.pageIndex - 1, 0),
                 }))
               }
-              disabled={pagination.pageIndex > 0 ? false : true}
+              disabled={pagination.pageIndex === 0}
             >
               Previous
             </button>
             <span>
               Page{" "}
               <strong>
-                {table.getState().pagination.pageIndex + 1} of{" "}
-                {table.getPageCount()}
+                {pagination.pageIndex + 1} of {totalPages}
               </strong>
             </span>
             <button
+              type="button"
               onClick={() =>
-                setPagination((prevPagination) => ({
-                  ...prevPagination,
-                  pageIndex: prevPagination.pageIndex + 1,
+                setPagination((prev) => ({
+                  ...prev,
+                  pageIndex: Math.min(prev.pageIndex + 1, totalPages - 1),
                 }))
               }
-              disabled={
-                (pagination.pageIndex + 2) * 10 > tableDataRes.total &&
-                (pagination.pageIndex + 2) * 10 - tableDataRes.total >= 10
-                  ? true
-                  : false
-              }
+              disabled={pagination.pageIndex + 1 >= totalPages}
             >
               Next
             </button>

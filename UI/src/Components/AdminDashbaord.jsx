@@ -1,15 +1,18 @@
 import React, { useState } from "react";
+import {useNavigate} from "react-router-dom";
 import "../Css/Admin.css";
 import SubmitBookModal from "../Modals/SubmitBookModal.jsx";
 import UserRegistrationModal from "../Modals/RegisterUserModal.jsx";
 import DeleteUserModal from "../Modals/DeleteUserModal.jsx";
 import AdminAuth from "./AdminAuth.jsx";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import AddBooksModal from "../Modals/AddBooksModal.jsx";
 import AssignBooksModal from "../Modals/AssignBooksModal.jsx";
 
 
 function AdminDashbaord() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -51,7 +54,7 @@ function AdminDashbaord() {
         </div>
       </div>
       <div className="row">
-        <div className="card">
+        <div className="card" onClick={() => navigate("/students")}>
           <div className="card-icon">
             <i class="fa-solid fa-book"></i> 
           </div>

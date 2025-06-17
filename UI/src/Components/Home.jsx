@@ -4,9 +4,6 @@ import { useBooks } from "../Css/book.js";
 
 function Home() {
 
-  const {data, fetchNextPage, hasNextPage, isFetchingNextPage} = useBooks();
-  console.log(data); // This will log the flattened array of book results
-  console.log(hasNextPage); // This will log whether there are more pages to fetch
   return (
     <div className="container">
       <div>Welcome to Home page </div>
@@ -31,7 +28,7 @@ function Home() {
       <div className="card-container">
         <div className="card">
           <div className="card-icon">
-            <i class="fa-solid fa-graduation-cap"></i>
+            <i className="fa-solid fa-graduation-cap"></i>
           </div>
           <div>
             <a href="/students"> Go to Student</a>
@@ -39,7 +36,7 @@ function Home() {
         </div>
         <div className="card">
           <div className="card-icon">
-            <i class="fa-solid fa-user-lock"></i>
+            <i className="fa-solid fa-user-lock"></i>
           </div>
           <div>
             {" "}
