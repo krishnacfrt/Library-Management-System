@@ -7,9 +7,11 @@ import "../Css/RegisterUser.css";
 
 const AddBooksMOdal = ({ show, handleClose }) => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    contact: "",
+    title: "",
+    published_date: "",
+    author: "",
+    standard: 0,
+    category: ""
   });
 
   const handleChange = (e) => {
@@ -19,11 +21,11 @@ const AddBooksMOdal = ({ show, handleClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const resp= await axios.post("/users", formData);
-      toast.success(`User registered successfully!`);
+      const resp= await axios.post("/books", formData);
+      toast.success(`Book added successfully!`);
       handleClose();
     } catch (error) {
-      toast.error("Registration failed!");
+      toast.error(" Failed to add book!");
     }
   };
 
@@ -39,16 +41,24 @@ const AddBooksMOdal = ({ show, handleClose }) => {
           <h4 className="modal-title">Add New Book</h4>
           <Form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label className="form-label">Book Name:</label>
-              <input type="text" className="form-control" name="name" onChange={handleChange} required />
+              <label className="form-label">Book Title:</label>
+              <input type="text" className="form-control" name="title" onChange={handleChange} required />
             </div>
             <div className="form-group">
-              <label className="form-label">Book Id:</label>
-              <input type="email" className="form-control" name="email" onChange={handleChange} required />
+              <label className="form-label">Author:</label>
+              <input type="text" className="form-control" name="author" onChange={handleChange} required />
             </div>
             <div className="form-group">
-              <label className="form-label">Author Name:</label>
-              <input type="text" className="form-control" name="contact" onChange={handleChange} required />
+              <label className="form-label">Published date:</label>
+              <input type="text" className="form-control" name="published_date" onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Standard:</label>
+              <input type="text" className="form-control" name="standard" onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Category:</label>
+              <input type="text" className="form-control" name="category" onChange={handleChange} required />
             </div>
             <Button variant="primary" type="submit" className="submit-btn">
               Add
