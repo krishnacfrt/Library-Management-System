@@ -7,12 +7,17 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   useReactTable,
   getCoreRowModel,
+  getFilteredRowModel,
   flexRender,
+  createColumnHelper,
 } from "@tanstack/react-table";
 import axios from "axios";
 
-const fetchBooks = async () => {
-  const res = await axios.get("/books?page=1&page_size=50");
+const fetchBooks = async (search) => {
+  const params = search
+    ? { page: 1, page_size: 50, search }
+    : { page: 1, page_size: 50 };
+  const res = await axios.get("/books", { params });
   return res.data.books || [];
 };
 
@@ -25,22 +30,26 @@ const assignBooks = async ({ userId, books }) => {
   return axios.post("/transaction", { userId, books });
 };
 
+const columnHelper = createColumnHelper();
+
 const AssignBooksModal = ({ show, handleClose }) => {
   const [selectedBooks, setSelectedBooks] = useState([]);
   const [showCheckout, setShowCheckout] = useState(false);
   const [userId, setUserId] = useState("");
   const [userDetails, setUserDetails] = useState(null);
+  const [search, setSearch] = useState("");
 
   const queryClient = useQueryClient();
 
-  // Fetch books
+  // Fetch books with search
   const {
     data: books = [],
     isLoading: loadingBooks,
     isError: errorBooks,
+    refetch: refetchBooks,
   } = useQuery({
-    queryKey: ["books"],
-    queryFn: fetchBooks,
+    queryKey: ["books", search],
+    queryFn: () => fetchBooks(search),
     enabled: show,
   });
 
@@ -81,7 +90,10 @@ const AssignBooksModal = ({ show, handleClose }) => {
       setShowCheckout(false);
       setUserId("");
       setUserDetails(null);
+      setSearch("");
+      refetchBooks();
     }
+    // eslint-disable-next-line
   }, [show]);
 
   const handleBookSelect = (book) => {
@@ -138,14 +150,16 @@ const AssignBooksModal = ({ show, handleClose }) => {
           />
         ),
       },
-      {
-        accessorKey: "bookid",
+      columnHelper.accessor("bookid", {
         header: "Book ID",
-      },
-      ...keys.map((key) => ({
-        accessorKey: key,
-        header: key.charAt(0).toUpperCase() + key.slice(1),
-      })),
+        cell: (info) => info.getValue(),
+      }),
+      ...keys.map((key) =>
+        columnHelper.accessor(key, {
+          header: key.charAt(0).toUpperCase() + key.slice(1),
+          cell: (info) => info.getValue(),
+        })
+      ),
     ];
   }, [books, selectedBooks]);
 
@@ -153,7 +167,14 @@ const AssignBooksModal = ({ show, handleClose }) => {
     data: books,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
   });
+
+  // Search handler
+  const handleSearch = (e) => {
+    e.preventDefault();
+    refetchBooks();
+  };
 
   return (
     <Modal
@@ -175,7 +196,29 @@ const AssignBooksModal = ({ show, handleClose }) => {
         <div className="abm-modal-content">
           {!showCheckout ? (
             <>
-              <h5>Select books to assign:</h5>
+              <h5>Select and search books to assign:</h5>
+              <form onSubmit={handleSearch} style={{ marginBottom: "1rem" }}>
+                <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+                  <label htmlFor="searchBook" style={{ minWidth: "80px" }}>
+                    Search:
+                  </label>
+                  <input
+                    id="searchBook"
+                    type="text"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Book name, author, etc."
+                    className="search-input"
+                  />
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    style={{ minWidth: "100px" }}
+                  >
+                    Search
+                  </Button>
+                </div>
+              </form>
               {loadingBooks ? (
                 <div className="abm-center">
                   <Spinner animation="border" />
@@ -203,9 +246,7 @@ const AssignBooksModal = ({ show, handleClose }) => {
                       {table.getRowModel().rows.map((row, idx) => (
                         <tr
                           key={row.id}
-                          className={
-                            idx % 2 === 0 ? "abm-row-even" : "abm-row-odd"
-                          }
+                          className={idx % 2 === 0 ? "abm-row-even" : "abm-row-odd"}
                         >
                           {row.getVisibleCells().map((cell) => (
                             <td key={cell.id} style={{ minWidth: 120 }}>
@@ -231,7 +272,7 @@ const AssignBooksModal = ({ show, handleClose }) => {
                   onClick={handleCheckout}
                   disabled={selectedBooks.length === 0}
                 >
-                  Go to Cart
+                  Go to Checkout
                 </Button>
               </div>
             </>
