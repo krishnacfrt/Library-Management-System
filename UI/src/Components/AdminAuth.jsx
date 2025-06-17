@@ -38,6 +38,7 @@ const AdminAuth = () => {
         dispatch(setShowRegisterPage(false));
         dispatch(setAuthentication(true));
         toast.success("Successfully logged In!");
+        dispatch(setUserDetails({id:userId, name: 'Admin'}));
       }
     } catch (err) {
       setError("Authentication unsuccessful. Please try again.");
@@ -58,64 +59,58 @@ const AdminAuth = () => {
     return <RegisterAdmin />;
   }
 
-  // Render login form if requested
-  if (showAuthPage) {
-    return (
-      <div className="admin-auth-container">
-        <form className="admin-auth-form" onSubmit={handleSubmit}>
-          <h2>Admin Login</h2>
-          <label htmlFor="userId">Admin User ID</label>
-          <input
-            id="userId"
-            type="text"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-            required
-            autoFocus
-          />
+  return (
+    <div className="admin-auth-container">
+      <form className="admin-auth-form" onSubmit={handleSubmit}>
+        <h2>Admin Login</h2>
+        <label htmlFor="userId">Admin User ID</label>
+        <input
+          id="userId"
+          type="text"
+          value={userId}
+          onChange={(e) => setUserId(e.target.value)}
+          required
+          autoFocus
+        />
 
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+        <label htmlFor="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
 
-          <button type="submit" disabled={loading}>
-            {loading ? "Authenticating..." : "Login"}
-          </button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Authenticating..." : "Login"}
+        </button>
 
-          {error && (
-            <div className="auth-error">
-              <p>{error}</p>
-              <button type="button" onClick={handleRetry}>
-                Retry
-              </button>
-            </div>
-          )}
-
-          <div className="not-registered-block">
-            <span>Not registered? </span>
-            <button
-              type="button"
-              className="register-link"
-              onClick={() => {
-                dispatch(setShowAuthPage(false));
-                dispatch(setShowRegisterPage(true));
-              }}
-            >
-              Register Now
+        {error && (
+          <div className="auth-error">
+            <p>{error}</p>
+            <button type="button" onClick={handleRetry}>
+              Retry
             </button>
           </div>
-        </form>
-      </div>
-    );
-  }
+        )}
 
-  // If neither auth nor register page should show, render nothing
-  return null;
+        <div className="not-registered-block">
+          <span>Not registered? </span>
+          <button
+            type="button"
+            className="register-link"
+            onClick={() => {
+              dispatch(setShowAuthPage(false));
+              dispatch(setShowRegisterPage(true));
+            }}
+          >
+            Register Now
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default AdminAuth;

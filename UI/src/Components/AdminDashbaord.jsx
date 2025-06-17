@@ -8,7 +8,7 @@ import AdminAuth from "./AdminAuth.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import AddBooksModal from "../Modals/AddBooksModal.jsx";
 import AssignBooksModal from "../Modals/AssignBooksModal.jsx";
-import { setAuthentication } from "../redux/adminAuthSlice";
+import { setAuthentication, setUserDetails } from "../redux/adminAuthSlice";
 
 function AdminDashbaord() {
   const navigate = useNavigate();
@@ -19,12 +19,15 @@ function AdminDashbaord() {
   const [showAddBooksModal, setShowAddBooksModal] = useState(false);
   const [showAssignBooksModal, setShowAssignBooksModal] = useState(false);
 
-  const { isAuthenticated } = useSelector((state) => state.adminAuth);
+  const { isAuthenticated, userDetails } = useSelector(
+    (state) => state.adminAuth
+  );
 
   // Logout handler
   const handleLogout = () => {
     dispatch(setAuthentication(false));
-    // Optionally reset other admin state here
+    navigate("/");
+    dispatch(setUserDetails(""));
   };
 
   if (!isAuthenticated) {
@@ -36,8 +39,8 @@ function AdminDashbaord() {
       <div className="admin-container">
         <div className="container-child container-child-admin">
           <i className="fa-solid fa-user-tie"></i>
-          <h3>Admin Name</h3>
-          <p>Admin id</p>
+          <h3>{userDetails?.name}</h3>
+          <p>{userDetails?.id || "_"}</p>
           <button className="logout-btn" onClick={handleLogout}>
             Logout
           </button>
@@ -76,7 +79,10 @@ function AdminDashbaord() {
               </div>
               <div>Delete User</div>
             </div>
-            <div className="card" onClick={() => navigate("/users")}>
+            <div
+              className="card"
+              onClick={() => alert("This feature is under development")}
+            >
               <div className="card-icon">
                 <i className="fa-solid fa-users"></i>
               </div>

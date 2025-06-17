@@ -95,7 +95,6 @@ const RegisterAdmin = () => {
             className="register-link"
             onClick={() => {
               dispatch(setShowRegisterPage(false));
-              dispatch(setShowAuthPage(true));
             }}
           >
             Login
