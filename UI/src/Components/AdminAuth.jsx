@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../Css/AdminAuth.css";
 import { useSelector, useDispatch } from "react-redux";
-import { setShowAuthPage, setUserDetails, setAuthentication, setShowRegisterPage } from "../redux/adminAuthSlice";
+import {
+  setShowAuthPage,
+  setUserDetails,
+  setAuthentication,
+  setShowRegisterPage,
+} from "../redux/adminAuthSlice";
 import RegisterAdmin from "./RegisterAdmin";
 import { toast } from "react-toastify";
 
@@ -11,12 +16,16 @@ const AdminAuth = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const {showAuthPage, showRegisterPage}= useSelector((state)=> state.adminAuth)
-  const dispatch = useDispatch();
 
+  const { showAuthPage, showRegisterPage } = useSelector(
+    (state) => state.adminAuth
+  );
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
     try {
       const response = await axios.post("/admin/authenticate", {
         username: userId,
@@ -26,6 +35,7 @@ const AdminAuth = () => {
       if (response.status === 200) {
         dispatch(setUserDetails(userId));
         dispatch(setShowAuthPage(false));
+        dispatch(setShowRegisterPage(false));
         dispatch(setAuthentication(true));
         toast.success("Successfully logged In!");
       }
@@ -42,12 +52,15 @@ const AdminAuth = () => {
     setUserId("");
     setPassword("");
   };
+
+  // Render registration page if requested
   if (showRegisterPage) {
     return <RegisterAdmin />;
   }
-  return (
-    <>
-      { showAuthPage ?
+
+  // Render login form if requested
+  if (showAuthPage) {
+    return (
       <div className="admin-auth-container">
         <form className="admin-auth-form" onSubmit={handleSubmit}>
           <h2>Admin Login</h2>
@@ -60,6 +73,7 @@ const AdminAuth = () => {
             required
             autoFocus
           />
+
           <label htmlFor="password">Password</label>
           <input
             id="password"
@@ -68,9 +82,11 @@ const AdminAuth = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+
           <button type="submit" disabled={loading}>
             {loading ? "Authenticating..." : "Login"}
           </button>
+
           {error && (
             <div className="auth-error">
               <p>{error}</p>
@@ -79,26 +95,27 @@ const AdminAuth = () => {
               </button>
             </div>
           )}
+
           <div className="not-registered-block">
             <span>Not registered? </span>
             <button
               type="button"
               className="register-link"
-              onClick={()=> {
-                dispatch(setShowRegisterPage(true))
+              onClick={() => {
                 dispatch(setShowAuthPage(false));
+                dispatch(setShowRegisterPage(true));
               }}
             >
               Register Now
             </button>
           </div>
         </form>
-      </div> : <div> 
-        <RegisterAdmin />
       </div>
-      }
-    </>
-  );
+    );
+  }
+
+  // If neither auth nor register page should show, render nothing
+  return null;
 };
 
 export default AdminAuth;

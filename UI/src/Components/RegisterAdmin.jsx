@@ -10,31 +10,30 @@ const RegisterAdmin = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const {showRegisterPage, showAuthPage}= useSelector((state)=> state.adminAuth)
+
+  const { showRegisterPage } = useSelector((state) => state.adminAuth);
   const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // dispatch(setShowRegisterPage(false));
-    // dispatch(setShowAuthPage(true));
+    setError("");
+    if (password !== confirmPassword) {
+      setError("Passwords do not match. Please try again.");
+      return;
+    }
+    setLoading(true);
     try {
-        if (password !== confirmPassword) {
-            setError("Passwords do not match. Please try again."); 
-            throw new Error('passwords do not match');
-            return
-         }
-        setLoading(false);
       const response = await axios.post("/admin/register", {
-        username:userId,
+        username: userId,
         password,
-        security_code: 'SECRET123'
+        security_code: "SECRET123",
       });
       if (response.status === 200) {
-        dispatch(setAuthPage(true));
+        dispatch(setShowAuthPage(true));
         dispatch(setShowRegisterPage(false));
       }
     } catch (err) {
-      setError("Authentication unsuccessful. Please try again.");
+      setError("Registration unsuccessful. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -44,68 +43,66 @@ const RegisterAdmin = () => {
     setError("");
     setUserId("");
     setPassword("");
+    setConfirmPassword("");
   };
 
+  if (!showRegisterPage) return null;
+
   return (
-    <>
-      {showRegisterPage ?
-      <div className="admin-auth-container">
-        <form className="admin-auth-form" onSubmit={handleSubmit}>
-          <h2>Admin Registration</h2>
-          <label htmlFor="userId">Set Admin User ID</label>
-          <input
-            id="userId"
-            type="text"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-            required
-            autoFocus
-          />
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <label htmlFor="confirmPassword">Confirm Password</label>
-           <input
-            id="password"
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-          <button type="submit" disabled={loading}>
-            {loading ? "Authenticating..." : "Login"}
-          </button>
-          {error && (
-            <div className="auth-error">
-              <p>{error}</p>
-              <button type="button" onClick={handleRetry}>
-                Retry
-              </button>
-            </div>
-          )}
-          <div className="not-registered-block">
-            <span>Already registered? </span>
-            <button
-              type="button"
-              className="register-link"
-              onClick={()=>{
-                 dispatch(setShowRegisterPage(false))
-                 dispatch(setShowAuthPage(true))}
-                }
-            >
-              Login
+    <div className="admin-auth-container">
+      <form className="admin-auth-form" onSubmit={handleSubmit}>
+        <h2>Admin Registration</h2>
+        <label htmlFor="userId">Set Admin User ID</label>
+        <input
+          id="userId"
+          type="text"
+          value={userId}
+          onChange={(e) => setUserId(e.target.value)}
+          required
+          autoFocus
+        />
+        <label htmlFor="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <label htmlFor="confirmPassword">Confirm Password</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
+        <button type="submit" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
+        </button>
+        {error && (
+          <div className="auth-error">
+            <p>{error}</p>
+            <button type="button" onClick={handleRetry}>
+              Retry
             </button>
           </div>
-        </form>
-      </div> : 
-      <div></div>
-      }
-    </>
+        )}
+        <div className="not-registered-block">
+          <span>Already registered? </span>
+          <button
+            type="button"
+            className="register-link"
+            onClick={() => {
+              dispatch(setShowRegisterPage(false));
+              dispatch(setShowAuthPage(true));
+            }}
+          >
+            Login
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 
