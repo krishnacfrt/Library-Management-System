@@ -4,4 +4,3 @@ pydantic
 mysql-connector-python
 bcrypt
 python-dotenv 
-dotenv
